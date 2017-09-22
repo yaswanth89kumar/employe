@@ -3,7 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
+<<<<<<< HEAD
 -- Generation Time: Sep 22, 2017 at 06:39 AM
+=======
+-- Generation Time: Sep 21, 2017 at 07:51 AM
+>>>>>>> 229c209eddc06c66ae2cea91b757a8f4c749f6c0
 -- Server version: 10.1.26-MariaDB
 -- PHP Version: 7.1.8
 
@@ -45,6 +49,24 @@ INSERT INTO `users` (`id`, `username`, `firstname`, `lastname`, `email`, `passwo
 (1, 'ykumar', 'yaswanth', 'kumar', 'yaswant.kumar@capgemini.com', '123456'),
 (2, 'maggie', 'Meghanaa', 'R', 'meghanaa.r@capgemini.com', '123456');
 
+<<<<<<< HEAD
+=======
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users_sample`
+--
+
+CREATE TABLE `users_sample` (
+  `id` int(6) UNSIGNED NOT NULL,
+  `firstname` varchar(30) NOT NULL,
+  `lastname` varchar(30) NOT NULL,
+  `email` varchar(50) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+>>>>>>> 229c209eddc06c66ae2cea91b757a8f4c749f6c0
 --
 -- Indexes for dumped tables
 --
@@ -56,6 +78,15 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
+<<<<<<< HEAD
+=======
+-- Indexes for table `users_sample`
+--
+ALTER TABLE `users_sample`
+  ADD PRIMARY KEY (`id`);
+
+--
+>>>>>>> 229c209eddc06c66ae2cea91b757a8f4c749f6c0
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -63,7 +94,16 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
+<<<<<<< HEAD
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;COMMIT;
+=======
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `users_sample`
+--
+ALTER TABLE `users_sample`
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;COMMIT;
+>>>>>>> 229c209eddc06c66ae2cea91b757a8f4c749f6c0
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
