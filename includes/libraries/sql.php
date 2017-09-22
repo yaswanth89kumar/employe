@@ -14,21 +14,35 @@ class enhanceClass extends dbConnect {
   public function getUsers(){
     $users_list = array();
     $error = array();
+    $exec = TRUE;
     if(isset($_POST)) {
       extract($_POST);
       if($this->checkappid($applicationid)){
         if(isset($username) && isset($password)) {
-          $sql = "select * from users where username='".$username."' and password='".$password."'";
-          $data = $this->database->query($sql);
-          if ($data->num_rows > 0) {
-            // output data of each row
-            while($row = $data->fetch_assoc()) {
-                array_push($users_list, array(
-                'id'=> $row["id"],
-                'username' => $row['username'],
-                'firstname' => $row['firstname'],
-                'lastname' => $row['lastname'],
-                ));
+          if($username == "") {
+            $exec = FALSE;
+            array_push($error, array('please fill username'));
+          }
+          if($password == "") {
+            $exec = 0;
+            array_push($error, array('please fill password'));
+          }
+          if($exec) {
+            $sql = "select * from users where username='".$username."' and password='".$password."'";
+            $data = $this->database->query($sql);
+            if ($data->num_rows > 0) {
+              // output data of each row
+              while($row = $data->fetch_assoc()) {
+                  array_push($users_list, array(
+                  'id'=> $row["id"],
+                  'username' => $row['username'],
+                  'firstname' => $row['firstname'],
+                  'lastname' => $row['lastname'],
+                  ));
+              }
+            }
+            else {
+              array_push($error, array('Authentication failed!!!!'));
             }
           }
         }
@@ -41,6 +55,49 @@ class enhanceClass extends dbConnect {
       }
     }
     echo json_encode(array('userlist'=>$users_list, 'error'=>$error));
+  }
+  
+  public function getUserdetails() {
+    $userdetails = array();
+    if(isset($_POST)) {
+      extract($_POST);
+      if($this->checkappid($applicationid)){
+        $sql = "select * from users where id=".$userid;
+            $data = $this->database->query($sql);
+            if ($data->num_rows > 0) {
+              // output data of each row
+              while($row = $data->fetch_assoc()) {
+                  array_push($userdetails, array(
+                  'id'=> $row["id"],
+                  'username' => $row['username'],
+                  'firstname' => $row['firstname'],
+                  'lastname' => $row['lastname'],
+                  'email' => $row['email'],
+                  ));
+              }
+            }
+      }
+    }
+    return $userdetails;
+  }
+  
+  public function getAllusers() {
+    $userdetails = array();
+    $sql = "select * from users";
+    $data = $this->database->query($sql);
+    if ($data->num_rows > 0) {
+      // output data of each row
+      while($row = $data->fetch_assoc()) {
+        array_push($userdetails, array(
+          'id'=> $row["id"],
+          'username' => $row['username'],
+          'firstname' => $row['firstname'],
+          'lastname' => $row['lastname'],
+          'email' => $row['email'],
+        ));
+      }
+    }
+    return $userdetails;
   }
   
   public function checkappid($applicationid) {
