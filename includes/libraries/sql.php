@@ -24,7 +24,7 @@ class enhanceClass extends dbConnect {
             array_push($error, array('please fill username'));
           }
           if($password == "") {
-            $exec = 0;
+            $exec = FALSE;
             array_push($error, array('please fill password'));
           }
           if($exec) {
@@ -98,6 +98,54 @@ class enhanceClass extends dbConnect {
       }
     }
     return $userdetails;
+  }
+  
+  public function register() {
+    $result = 0;
+    $error = array();
+    $exec = TRUE;
+    if(isset($_POST)) {
+      extract($_POST);
+      if($this->checkappid($applicationid)){
+        if($username == "") {
+          $exec = FALSE;
+          array_push($error, array('please fill username'));
+        }
+        if($password == "") {
+          $exec = FALSE;
+          array_push($error, array('please fill password'));
+        }
+        if($firstname == "") {
+          $exec = FALSE;
+          array_push($error, array('please fill firstname'));
+        }
+        if($lastname == "") {
+          $exec = FALSE;
+          array_push($error, array('please fill lastname'));
+        }
+        if($email == "") {
+          $exec = FALSE;
+          array_push($error, array('please fill emailid'));
+        }
+        if($exec) {
+          $sql = "select * from users where username='".$username."' or email='".$email."'";
+          $data = $this->database->query($sql);
+          if ($data->num_rows > 0) {
+            $exec = FALSE;
+            array_push($error, array('User already exist!'));
+          }
+          else {
+            $sql = "insert into users(username, firstname, lastname, email, password) values ('".$username."', '".$firstname."', '".$lastname."', '".$email."', '".$password."')";
+            $this->database->query($sql);
+            $result = 1;
+          }
+        }
+      }
+      else {
+        array_push($error, array('Who the hell are you?'));
+      }
+    }
+    echo json_encode(array('status'=>$result, 'error'=>$error));
   }
   
   public function checkappid($applicationid) {
