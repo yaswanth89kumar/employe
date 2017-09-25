@@ -148,6 +148,65 @@ class enhanceClass extends dbConnect {
     echo json_encode(array('status'=>$result, 'error'=>$error));
   }
   
+  public function updateProfile() {
+    $result = 0;
+    $error = array();
+    $success = array();
+    $exec = TRUE;
+    if(isset($_POST)) {
+      extract($_POST);
+      if($this->checkappid($applicationid)){
+        if($username == "") {
+          $exec = FALSE;
+          array_push($error, array('please fill username'));
+        }
+        if($password == $currentpassword) {
+          $exec = FALSE;
+          array_push($error, array('please enter different password from current password'));
+        }
+        if($currentpassword == "") {
+          $exec = FALSE;
+          array_push($error, array('please fill Current password'));
+        }
+        if($firstname == "") {
+          $exec = FALSE;
+          array_push($error, array('please fill firstname'));
+        }
+        if($lastname == "") {
+          $exec = FALSE;
+          array_push($error, array('please fill lastname'));
+        }
+        if($email == "") {
+          $exec = FALSE;
+          array_push($error, array('please fill emailid'));
+        }
+        if($exec) {
+          $sql = "select * from users where password='".$currentpassword."' and email='".$email."'";
+          $data = $this->database->query($sql);
+          if ($data->num_rows == 0) {
+            $exec = FALSE;
+            array_push($error, array('Please enter valid current password!!!'));
+          }
+          else {
+            $attach = "";
+            if(!empty($password)) {
+              $attach = ", password='".$password."'";
+            }
+            
+            $sql = "update users set username='".$username."', firstname='".$firstname."', lastname='".$lastname."', email='".$email."'".$attach." where email='".$email."'";
+            $this->database->query($sql);
+            $result = 1;
+            array_push($success, array('Your details got updated successfully!!'));
+          }
+        }
+      }
+      else {
+        array_push($error, array('Who the hell are you?'));
+      }
+    }
+    echo json_encode(array('status'=>$result, 'error'=>$error, 'success'=>$success));
+  }
+  
   public function checkappid($applicationid) {
     if($applicationid != $this->appid){ 
       return FALSE;
