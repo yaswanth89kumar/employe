@@ -65,14 +65,22 @@ class enhanceClass extends dbConnect {
         $sql = "select * from users where id=".$userid;
             $data = $this->database->query($sql);
             if ($data->num_rows > 0) {
+              $editstatus = 1;
+              $pastcurrentdate = strtotime(date('Y-m-d H:i:s', strtotime('-60 days', strtotime(date("Y-m-d H:i:s")))));
               // output data of each row
               while($row = $data->fetch_assoc()) {
+                  $profileupdated_date = strtotime($row['datetime']);
+                  if($pastcurrentdate < $profileupdated_date) {
+                    $editstatus = 0;
+                  }
                   array_push($userdetails, array(
                   'id'=> $row["id"],
                   'username' => $row['username'],
                   'firstname' => $row['firstname'],
                   'lastname' => $row['lastname'],
                   'email' => $row['email'],
+                  'editstatus' => $editstatus,
+                  'lastupdated' => $row['datetime'],
                   ));
               }
             }
@@ -205,6 +213,57 @@ class enhanceClass extends dbConnect {
       }
     }
     echo json_encode(array('status'=>$result, 'error'=>$error, 'success'=>$success));
+  }
+  
+  public function getProjects() {
+    $error = array();
+    $success = array();
+    $projectdetails = array();
+    $exec = TRUE;
+    if(isset($_POST)) {
+      extract($_POST);
+      if(!empty($empid)) {
+        if($this->checkappid($applicationid)){
+          $sql = "select * from projects where empid='".$empid."'";
+          $data = $this->database->query($sql);
+          if ($data->num_rows > 0) {
+            while($row = $data->fetch_assoc()) {
+              array_push($projectdetails, array(
+                'project' => $row['projectname'],
+                'designation' => $row['designation'],
+                'description' => $row['description'],
+              ));
+            }
+          }
+        }
+      }
+    }
+    echo json_encode(array('result'=>$projectdetails, 'error'=>$error, 'success'=>$success));
+  }
+  
+  public function getAchievements() {
+    $error = array();
+    $success = array();
+    $projectdetails = array();
+    $exec = TRUE;
+    if(isset($_POST)) {
+      extract($_POST);
+      if(!empty($empid)) {
+        if($this->checkappid($applicationid)){
+          $sql = "select * from achievements where empid='".$empid."'";
+          $data = $this->database->query($sql);
+          if ($data->num_rows > 0) {
+            while($row = $data->fetch_assoc()) {
+              array_push($projectdetails, array(
+                'subject' => $row['subject'],
+                'description' => $row['description'],
+              ));
+            }
+          }
+        }
+      }
+    }
+    echo json_encode(array('result'=>$projectdetails, 'error'=>$error, 'success'=>$success));
   }
   
   public function checkappid($applicationid) {
